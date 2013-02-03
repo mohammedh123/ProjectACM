@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+Debug/
+ipch/
+ProjectACM.opensdf
+ProjectACM.sdf
+ProjectACM.sln
+ProjectACM.suo
+*/*.vcxproj*
