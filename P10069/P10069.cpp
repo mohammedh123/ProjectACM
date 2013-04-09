@@ -1,3 +1,7 @@
+// Solution to problem 10069
+// by: Mohammed Hossain
+// Language: C++
+
 #include <string>
 #include <sstream>
 #include <vector>
@@ -63,46 +67,54 @@ public:
     }
 };
 
-BigInteger* ds(const string& X, const string& Z)
+class P10069
 {
-    int xWidth = X.size()+1;
-    int zWidth = Z.size()+1;
-    vector<BigInteger> dp;
-    dp.resize(xWidth*zWidth);
+    static BigInteger* NumDistinctSequences(const string& X, const string& Z)
+    {
+        int xWidth = X.size()+1;
+        int zWidth = Z.size()+1;
+        vector<BigInteger> dp;
+        dp.resize(xWidth*zWidth);
 
-    for(int i = 0; i < xWidth; i++) {
+        for(int i = 0; i < xWidth; i++) {
         
-        dp[Z.size()*xWidth + i] = BigInteger("1");
+            dp[Z.size()*xWidth + i] = BigInteger("1");
+        }
+
+        for(int i = X.size() - 1; i >= 0; i--) {
+            for(int j = Z.size()-1; j >= 0; j--) {
+                dp[i + j*xWidth].SetData(dp[i+1+j*xWidth]);
+
+                if(X[i] == Z[j])
+                    dp[i + j*xWidth].AddOn(dp[i+1+(j+1)*xWidth]);
+            }
+        }
+
+        BigInteger* bi = new BigInteger(dp[0]);
+
+        return bi;
     }
+public:
+    static void Solve()
+    {
+        int numCases;
 
-    for(int i = X.size() - 1; i >= 0; i--) {
-        for(int j = Z.size()-1; j >= 0; j--) {
-            dp[i + j*xWidth].SetData(dp[i+1+j*xWidth]);
+        cin >> numCases;
 
-            if(X[i] == Z[j])
-                dp[i + j*xWidth].AddOn(dp[i+1+(j+1)*xWidth]);
+        string X, Z;    
+        for(int i = 0; i < numCases; i++) {
+            cin >> X >> Z;
+
+            BigInteger* answer = NumDistinctSequences(X,Z);
+        
+            cout << answer->str() << endl;
+
+            delete answer;
         }
     }
-
-    BigInteger* bi = new BigInteger(dp[0]);
-
-    return bi;
-}
+};
 
 int main()
 {
-    int numCases;
-
-    cin >> numCases;
-
-    string X, Z;    
-    for(int i = 0; i < numCases; i++) {
-        cin >> X >> Z;
-
-        BigInteger* answer = ds(X,Z);
-        
-        cout << answer->str() << endl;
-
-        delete answer;
-    }
+    P10069::Solve();
 }

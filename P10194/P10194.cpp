@@ -1,4 +1,4 @@
-// Solution to problem P10194
+// Solution to problem 10194
 // by: Mohammed Hossain
 // Language: C++
 
