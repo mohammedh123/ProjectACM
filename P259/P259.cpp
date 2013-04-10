@@ -19,7 +19,7 @@ using namespace std;
 // 37 is end
 
 const int MAX_V = 38;
-const int Infinity = 100000;
+const int Infinity = 2000000000;
 int res[MAX_V][MAX_V], mf, f, s, t;
 
 vector<int> p;
@@ -73,7 +73,8 @@ class P259
 
     static void ResetGraph()
     {
-        memset(res, 0, MAX_V*MAX_V*sizeof(int));
+        memset(res, 0, sizeof(res));
+        mf = 0;
     }
 
     static void SetupGraph(const vector<ComputerProgram>& progs)
@@ -86,9 +87,9 @@ class P259
 
         for(int i = 0; i < progs.size(); i++)
         {
-            progCode = progs[i].program-'A'+1;
+            progCode = 1 + progs[i].program-'A';
 
-            res[s][progCode] += progs[i].numPeople;
+            res[s][progCode] = progs[i].numPeople;
 
             for(int x = 0; x < progs[i].allocatedComputers.size(); x++)
             {
@@ -115,11 +116,6 @@ public:
             string str;
             vector<ComputerProgram> programs;
             
-            if(idx > 0)
-            {
-                getline(cin,str);
-            }
-
             while(getline(cin,str) && !cin.eof())
             {
                 string progPeople, computers;
@@ -137,8 +133,10 @@ public:
 
                 totalApps += prog.numPeople;
                 
-                for(int i = 0; i < computers.size()-1; i++)
+                for(int i = 0; i < computers.size(); i++)
                 {
+                    if(computers[i] == ';') continue;
+
                     prog.allocatedComputers.push_back(computers[i]-'0');
                 }
 
@@ -148,24 +146,26 @@ public:
             SetupGraph(programs);
             
             CalculateFlow();
-
-            string output;
-            output.resize(10,'_');
-
-            for(int i = 27; i <= 36; i++)
-            {
-                for(int j = 1; j <= 26; j++)
-                {
-                    if(res[i][j] == 1)
-                    {
-                        output[i-27] = (char)('A' + j-1);
-                        break;
-                    }
-                }
-            }
-
+            
             if(mf == totalApps)
-                cout << output << endl;
+            {
+                for(int i = 27; i <= 36; i++)
+                {
+                    int j;
+                    for(j = 1; j <= 26; j++)
+                    {
+                        if(res[i][j])
+                        {
+                            cout << ((char)('A' + j-1));
+                            break;
+                        }
+                    }
+
+                    if(j > 26)
+                        cout << "_";
+                }
+                cout << endl;
+            }
             else
                 cout << "!" << endl;
 
